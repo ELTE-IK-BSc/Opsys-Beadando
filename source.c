@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#define BUFFER_SIZE 1024
 
 int getLastId(FILE *file, int poemNum)
 {
     int lastId;
-    char buff[1024];
+    char buff[BUFFER_SIZE];
 
     file = fopen("test.txt", "r");
     int currindex;
@@ -40,15 +41,15 @@ int getLastId(FILE *file, int poemNum)
 void addNewPoem(FILE *file, int poemNum)
 {
     file = fopen("test.txt", "a");
-    char newPoem[256];
+    char newPoem[BUFFER_SIZE];
     int id = getLastId(file, poemNum);
     fprintf(file, "\n| %d | ", ++id);
     printf("Ird le/vagy masold be a verset!\n");
-    fgets(newPoem, 254, stdin);
+    fgets(newPoem, BUFFER_SIZE - 2, stdin);
     char *newline = strchr(newPoem, '\n');
     *newline = ' ';
     *(newline + 1) = '|';
-    newPoem[256] = '\0';
+    newPoem[BUFFER_SIZE] = '\0';
     fprintf(file, "%s", newPoem);
     fclose(file);
 }
@@ -56,7 +57,7 @@ void addNewPoem(FILE *file, int poemNum)
 // READ - Versek listázása
 void printPoems(FILE *file, int poemNum)
 {
-    char buff[1024];
+    char buff[BUFFER_SIZE];
 
     file = fopen("test.txt", "r+");
     int currindex;
@@ -95,7 +96,7 @@ int main()
     fpi = fopen("test.txt", "r+");
 
     int db = 0;
-    char buff[1024];
+    char buff[BUFFER_SIZE];
     while (fscanf(fpi, "%s", buff) == 1)
     {
         if (!strcmp(buff, "|"))
