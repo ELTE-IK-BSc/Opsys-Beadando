@@ -2,6 +2,22 @@
 
 int main()
 {
+    FILE *fpi;
+    fpi = fopen("test.txt", "r+");
+
+    int db = 0;
+    char buff[1024];
+    while (fscanf(fpi, "%s", buff) == 1)
+    {
+        if (!strcmp(buff, "|"))
+        {
+            db++;
+        }
+    }
+    fclose(fpi);
+    int poemNum = db / 3;
+    printf("Versek szama: %d", poemNum);
+    
     // CREATE - Vers hozzáadaása
     // READ - Versek listázása
     // UPDATE - Vers módosítása
