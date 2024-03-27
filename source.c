@@ -1,5 +1,43 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
+// READ - Versek listázása
+void printPoems(FILE *file, int poemNum)
+{
+    char buff[1024];
+
+    file = fopen("test.txt", "r+");
+    int currindex;
+    for (int i = 0; i < poemNum; i++)
+    {
+        printf("\n");
+
+        // Beolvas elso |
+        fscanf(file, "%s", buff);
+
+        // Beolvas poem id
+        fscanf(file, "%s", buff);
+        currindex = (int)buff[0];
+        printf("ID: %c\n", currindex);
+
+        // Beolvas masodik |
+        fscanf(file, "%s", buff);
+
+        do
+        {
+            fscanf(file, "%s", buff);
+            if (strcmp(buff, "|"))
+            {
+                printf("%s ", buff);
+            }
+        } while (strcmp(buff, "|"));
+
+        printf("\n");
+    }
+
+    fclose(file);
+}
 int main()
 {
     FILE *fpi;
@@ -17,7 +55,7 @@ int main()
     fclose(fpi);
     int poemNum = db / 3;
     printf("Versek szama: %d", poemNum);
-    
+
     // CREATE - Vers hozzáadaása
     // READ - Versek listázása
     // UPDATE - Vers módosítása
@@ -48,6 +86,7 @@ int main()
         case 2:
             printf("\n");
             printf("Versek: \n");
+            printPoems(fpi, poemNum);
             break;
         case 3:
             printf("\n");
