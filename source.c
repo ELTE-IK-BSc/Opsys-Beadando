@@ -13,17 +13,17 @@ int getLastId(FILE *file, int poemNum)
     for (int i = 0; i < poemNum; i++)
     {
 
-        // Beolvas elso |
+        // Read first '|'
         fscanf(file, "%s", buff);
 
-        // Beolvas poem id
+        // Read poem id
         fscanf(file, "%d", &currindex);
         if (i == poemNum - 1)
         {
             lastId = currindex;
         }
 
-        // Beolvas masodik |
+        // Read second '|'
         fscanf(file, "%s", buff);
 
         do
@@ -42,14 +42,22 @@ void addNewPoem(FILE *file, int poemNum)
 {
     file = fopen("test.txt", "a");
     char newPoem[BUFFER_SIZE];
+
+    // Give ID to poem
     int id = getLastId(file, poemNum);
     fprintf(file, "\n| %d | ", ++id);
+
+    // Get poem from console
     printf("Ird le/vagy masold be a verset!\n");
     fgets(newPoem, BUFFER_SIZE - 2, stdin);
+
+    // Change end character
     char *newline = strchr(newPoem, '\n');
     *newline = ' ';
     *(newline + 1) = '|';
     newPoem[BUFFER_SIZE] = '\0';
+
+    // Write to file
     fprintf(file, "%s", newPoem);
     fclose(file);
 }
@@ -90,6 +98,15 @@ void printPoems(FILE *file, int poemNum)
     fclose(file);
 }
 
+// UPDATE - Vers módosítása
+void updatePoem()
+{
+}
+// DELETE - Vers törlése
+void deletePoem()
+{
+}
+
 int main()
 {
     FILE *fpi;
@@ -107,9 +124,6 @@ int main()
     fclose(fpi);
     int poemNum = db / 3;
     printf("Versek szama: %d", poemNum);
-
-    // UPDATE - Vers módosítása
-    // DELETE - Vers törlése
 
     while (1)
     {
