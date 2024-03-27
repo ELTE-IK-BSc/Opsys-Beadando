@@ -17,9 +17,8 @@ void printPoems(FILE *file, int poemNum)
         fscanf(file, "%s", buff);
 
         // Beolvas poem id
-        fscanf(file, "%s", buff);
-        currindex = (int)buff[0];
-        printf("ID: %c\n", currindex);
+        fscanf(file, "%d", &currindex);
+        printf("ID: %d\n", currindex);
 
         // Beolvas masodik |
         fscanf(file, "%s", buff);
@@ -38,6 +37,7 @@ void printPoems(FILE *file, int poemNum)
 
     fclose(file);
 }
+
 int main()
 {
     FILE *fpi;
@@ -57,7 +57,7 @@ int main()
     printf("Versek szama: %d", poemNum);
 
     // CREATE - Vers hozzáadaása
-    // READ - Versek listázása
+
     // UPDATE - Vers módosítása
     // DELETE - Vers törlése
 
@@ -76,6 +76,7 @@ int main()
 
         int menuitem;
         scanf("%d", &menuitem);
+        getchar();
         switch (menuitem)
         {
         case 1:
