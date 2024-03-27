@@ -2,6 +2,57 @@
 #include <stdlib.h>
 #include <string.h>
 
+int getLastId(FILE *file, int poemNum)
+{
+    int lastId;
+    char buff[1024];
+
+    file = fopen("test.txt", "r");
+    int currindex;
+    for (int i = 0; i < poemNum; i++)
+    {
+
+        // Beolvas elso |
+        fscanf(file, "%s", buff);
+
+        // Beolvas poem id
+        fscanf(file, "%d", &currindex);
+        if (i == poemNum - 1)
+        {
+            lastId = currindex;
+        }
+
+        // Beolvas masodik |
+        fscanf(file, "%s", buff);
+
+        do
+        {
+            fscanf(file, "%s", buff);
+
+        } while (strcmp(buff, "|"));
+    }
+
+    fclose(file);
+    return lastId;
+}
+
+// CREATE - Vers hozzáadaása
+void addNewPoem(FILE *file, int poemNum)
+{
+    file = fopen("test.txt", "a");
+    char newPoem[256];
+    int id = getLastId(file, poemNum);
+    fprintf(file, "\n| %d | ", ++id);
+    printf("Ird le/vagy masold be a verset!\n");
+    fgets(newPoem, 254, stdin);
+    char *newline = strchr(newPoem, '\n');
+    *newline = ' ';
+    *(newline + 1) = '|';
+    newPoem[256] = '\0';
+    fprintf(file, "%s", newPoem);
+    fclose(file);
+}
+
 // READ - Versek listázása
 void printPoems(FILE *file, int poemNum)
 {
@@ -56,8 +107,6 @@ int main()
     int poemNum = db / 3;
     printf("Versek szama: %d", poemNum);
 
-    // CREATE - Vers hozzáadaása
-
     // UPDATE - Vers módosítása
     // DELETE - Vers törlése
 
@@ -81,7 +130,8 @@ int main()
         {
         case 1:
             printf("\n");
-
+            addNewPoem(fpi, poemNum);
+            poemNum++;
             printf("Vers hozzaadva \n");
             break;
         case 2:
