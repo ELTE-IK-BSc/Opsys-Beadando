@@ -8,7 +8,7 @@ int getLastId(FILE *file, int poemNum)
     int lastId;
     char buff[BUFFER_SIZE];
 
-    file = fopen("test.txt", "r");
+    file = fopen("data.txt", "r");
     int currindex;
     for (int i = 0; i < poemNum; i++)
     {
@@ -40,7 +40,7 @@ int getLastId(FILE *file, int poemNum)
 // CREATE - Vers hozzáadaása
 void addNewPoem(FILE *file, int poemNum)
 {
-    file = fopen("test.txt", "a");
+    file = fopen("data.txt", "a");
     char newPoem[BUFFER_SIZE];
 
     // Give ID to poem
@@ -128,7 +128,7 @@ void savePomes(FILE *file, int poemNum, char **poems, int *poemsLen)
 
     char buff[BUFFER_SIZE];
 
-    file = fopen("test.txt", "r");
+    file = fopen("data.txt", "r");
     int currindex;
     for (int i = 0; i < poemNum; i++)
     {
@@ -155,7 +155,7 @@ void savePomes(FILE *file, int poemNum, char **poems, int *poemsLen)
 
 void writeFile(FILE *file, int poemNum, char **poems)
 {
-    file = fopen("test.txt", "w");
+    file = fopen("data.txt", "w");
 
     for (int i = 0; i < poemNum; i++)
     {
@@ -170,7 +170,7 @@ void writeFile(FILE *file, int poemNum, char **poems)
 int main()
 {
     FILE *fpi;
-    fpi = fopen("test.txt", "r");
+    fpi = fopen("data.txt", "r");
 
     int db = 0;
     char buff[BUFFER_SIZE];
