@@ -95,8 +95,21 @@ void updatePoem(char **poems)
     printf("Vers modositva \n");
 }
 // DELETE - Vers törlése
-void deletePoem()
+void deletePoem(char **poems, int poemNum)
 {
+    int poemID;
+    printf("\nAdd meg az ID-t! ");
+    scanf("%d", &poemID);
+    getchar();
+    poemID -= 1;
+
+    for (int i = poemID; i < poemNum - 1; i++)
+    {
+        poems[i] = (char *)malloc((strlen(poems[i + 1]) + 1) * sizeof(char));
+        strcpy(poems[i], poems[i + 1]);
+    }
+
+    printf("Vers torolve \n");
 }
 
 void savePomes(FILE *file, int poemNum, char **poems)
@@ -204,8 +217,10 @@ int main()
             writeFile(fpi, poemNum, poems);
             break;
         case 4:
-            printf("\n");
-            printf("Vers torlve \n");
+            printPoems(poems, poemNum);
+            deletePoem(poems, poemNum);
+            poemNum--;
+            writeFile(fpi, poemNum, poems);
             break;
         case 5:
             printf("\n");
