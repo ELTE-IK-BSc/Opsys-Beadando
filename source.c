@@ -112,8 +112,19 @@ void deletePoem(char **poems, int poemNum)
     printf("Vers torolve \n");
 }
 
-void savePomes(FILE *file, int poemNum, char **poems)
+void savePomes(FILE *file, int poemNum, char **poems, int *poemsLen)
 {
+    if (poemNum == *poemsLen)
+    {
+        char **temp = realloc(poems, (poemNum + 5) * sizeof(char *));
+        if (temp == NULL)
+        {
+            perror("Memory reallocation failed");
+            return;
+        }
+        poems = temp;
+        *poemsLen += 5;
+    }
 
     char buff[BUFFER_SIZE];
 
@@ -172,15 +183,16 @@ int main()
     }
     fclose(fpi);
     int poemNum = db / 3;
+    int poemsLen = poemNum + 5;
 
-    char **poems = (char **)malloc((poemNum + 20) * sizeof(char *));
+    char **poems = (char **)malloc((poemsLen) * sizeof(char *));
     if (poems == NULL)
     {
         perror("Memory allocation failed");
         return 1;
     }
 
-    savePomes(fpi, poemNum, poems);
+    savePomes(fpi, poemNum, poems, &poemsLen);
 
     while (1)
     {
@@ -206,7 +218,7 @@ int main()
             printf("\n");
             addNewPoem(fpi, poemNum);
             poemNum++;
-            savePomes(fpi, poemNum, poems);
+            savePomes(fpi, poemNum, poems, &poemsLen);
             printf("Vers hozzaadva \n");
             break;
         case 2:
