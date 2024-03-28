@@ -107,10 +107,54 @@ void deletePoem()
 {
 }
 
+void savePomes(FILE *file, int poemNum, char **poems)
+{
+
+    char buff[BUFFER_SIZE];
+
+    file = fopen("test.txt", "r");
+    int currindex;
+    for (int i = 0; i < poemNum; i++)
+    {
+
+        // Beolvas elso |
+        fscanf(file, "%s", buff);
+
+        // Beolvas poem id
+        fscanf(file, "%d", &currindex);
+
+        // Beolvas masodik |
+        fscanf(file, "%s", buff);
+
+        fgets(buff, sizeof(buff), file);
+
+        poems[i] = (char *)malloc((strlen(buff) + 1) * sizeof(char));
+        strcpy(poems[i], buff);
+
+        char *newline = strchr(poems[i], '|');
+        *(newline - 1) = '\0';
+    }
+    fclose(file);
+}
+
+void writeFile(FILE *file, int poemNum, char **poems)
+{
+    file = fopen("test.txt", "w");
+
+    for (int i = 0; i < poemNum; i++)
+    {
+        fprintf(file, "| %d | ", i+1);
+        fprintf(file, "%s", poems[i]);
+        fprintf(file, " |\n");
+    }
+
+    fclose(file);
+}
+
 int main()
 {
     FILE *fpi;
-    fpi = fopen("test.txt", "r+");
+    fpi = fopen("test.txt", "r");
 
     int db = 0;
     char buff[BUFFER_SIZE];
@@ -124,6 +168,15 @@ int main()
     fclose(fpi);
     int poemNum = db / 3;
     printf("Versek szama: %d", poemNum);
+
+    char **poems = (char **)malloc((poemNum + 20) * sizeof(char *));
+    if (poems == NULL)
+    {
+        perror("Memory allocation failed");
+        return 1;
+    }
+
+    savePomes(fpi, poemNum, poems);
 
     while (1)
     {
@@ -175,5 +228,11 @@ int main()
         }
     }
 
+    // Free allocated memory
+    for (int i = 0; i < poemNum; ++i)
+    {
+        free(poems[i]);
+    }
+    free(poems);
     return 0;
 }
