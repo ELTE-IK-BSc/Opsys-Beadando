@@ -63,39 +63,13 @@ void addNewPoem(FILE *file, int poemNum)
 }
 
 // READ - Versek listázása
-void printPoems(FILE *file, int poemNum)
+void printPoems(char **poems, int poemNum)
 {
-    char buff[BUFFER_SIZE];
-
-    file = fopen("test.txt", "r+");
-    int currindex;
+    printf("\nVersek: \n");
     for (int i = 0; i < poemNum; i++)
     {
-        printf("\n");
-
-        // Beolvas elso |
-        fscanf(file, "%s", buff);
-
-        // Beolvas poem id
-        fscanf(file, "%d", &currindex);
-        printf("ID: %d\n", currindex);
-
-        // Beolvas masodik |
-        fscanf(file, "%s", buff);
-
-        do
-        {
-            fscanf(file, "%s", buff);
-            if (strcmp(buff, "|"))
-            {
-                printf("%s ", buff);
-            }
-        } while (strcmp(buff, "|"));
-
-        printf("\n");
+        printf("%d -%s\n", (i + 1), poems[i]);
     }
-
-    fclose(file);
 }
 
 // UPDATE - Vers módosítása
@@ -143,7 +117,7 @@ void writeFile(FILE *file, int poemNum, char **poems)
 
     for (int i = 0; i < poemNum; i++)
     {
-        fprintf(file, "| %d | ", i+1);
+        fprintf(file, "| %d | ", i + 1);
         fprintf(file, "%s", poems[i]);
         fprintf(file, " |\n");
     }
@@ -200,12 +174,11 @@ int main()
             printf("\n");
             addNewPoem(fpi, poemNum);
             poemNum++;
+            savePomes(fpi, poemNum, poems);
             printf("Vers hozzaadva \n");
             break;
         case 2:
-            printf("\n");
-            printf("Versek: \n");
-            printPoems(fpi, poemNum);
+            printPoems(poems, poemNum);
             break;
         case 3:
             printf("\n");
