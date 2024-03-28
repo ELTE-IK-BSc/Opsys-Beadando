@@ -172,7 +172,6 @@ int main()
     }
     fclose(fpi);
     int poemNum = db / 3;
-    printf("Versek szama: %d", poemNum);
 
     char **poems = (char **)malloc((poemNum + 20) * sizeof(char *));
     if (poems == NULL)
@@ -185,20 +184,22 @@ int main()
 
     while (1)
     {
-        printf("\n");
-        printf("---------Menu---------\n");
-        printf("[1] - Vers hozzaadasa \n");
-        printf("[2] - Versek listazasa \n");
-        printf("[3] - Vers modositasa \n");
-        printf("[4] - Vers torlese \n");
-        printf("[5] - Kilepes \n");
-        printf("----------------------\n");
-
-        printf("Valsztott menupont: ");
+        printf("\n-------------Menu-------------\n");
+        printf("    [1] - Vers hozzaadasa \n");
+        printf("    [2] - Versek listazasa \n");
+        printf("    [3] - Vers modositasa \n");
+        printf("    [4] - Vers torlese \n");
+        printf("    [5] - Kilepes \n");
+        printf("------------------------------\n");
+        printf("    Versek aktualis szama: %d\n", poemNum);
+        printf("------------------------------\n");
+        printf("    Valsztott menupont: ");
 
         int menuitem;
         scanf("%d", &menuitem);
         getchar();
+        printf("------------------------------\n");
+
         switch (menuitem)
         {
         case 1:
