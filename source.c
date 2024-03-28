@@ -73,8 +73,26 @@ void printPoems(char **poems, int poemNum)
 }
 
 // UPDATE - Vers módosítása
-void updatePoem()
+void updatePoem(char **poems)
 {
+
+    int poemID;
+    printf("\nAdd meg az ID-t! ");
+    scanf("%d", &poemID);
+    getchar();
+    poemID -= 1;
+    printf("Eredeti: %s\n", poems[poemID]);
+    printf("Ird le/vagy masold be a modositott verset!\n");
+    char buff[BUFFER_SIZE];
+
+    fgets(buff, sizeof(buff), stdin);
+
+    poems[poemID] = (char *)malloc((strlen(buff) + 1) * sizeof(char));
+    char *newline = strchr(buff, '\n');
+    *newline = '\0';
+    strcpy(poems[poemID], buff);
+
+    printf("Vers modositva \n");
 }
 // DELETE - Vers törlése
 void deletePoem()
@@ -181,9 +199,9 @@ int main()
             printPoems(poems, poemNum);
             break;
         case 3:
-            printf("\n");
-
-            printf("Vers modositva \n");
+            printPoems(poems, poemNum);
+            updatePoem(poems);
+            writeFile(fpi, poemNum, poems);
             break;
         case 4:
             printf("\n");
