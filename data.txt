@@ -1,20 +1,21 @@
-| 1 |    Piros puszi! |
-| 2 |    Zold erdoben. |
-| 3 |    Licsi locsi |
-| 4 |    Pics Pocs locsolok |
-| 5 |    Alma fa |
-| 6 |    uj vers |
-| 7 |    Alma |
-| 8 |    alma |
-| 9 |    newest poem |
-| 10 |    Vers |
-| 11 |    asfasd dafgha d  adfha dfh ad hadf hadf |
-| 12 |    asdFGasdfg adfg adfg |
-| 13 |    Ez egy uj vers! |
-| 14 |    Meg egy |
-| 15 |   E husveti locsolodas! |
+| 1 | Piros puszi! |
+| 2 | Zold erdoben. |
+| 3 | Licsi locsi |
+| 4 | Pics Pocs locsolok |
+| 5 | Alma fa |
+| 6 | uj vers |
+| 7 | Alma |
+| 8 | alma |
+| 9 | newest poem |
+| 10 | Vers |
+| 11 | asfasd dafgha d  adfha dfh ad hadf hadf |
+| 12 | asdFGasdfg adfg adfg |
+| 13 | Ez egy uj vers! |
+| 14 | Meg egy |
+| 15 | E husveti locsolodas! |
 | 16 | K�sz�tsen C  nyelv� programot ami  ezt a feladatot megoldja, a megold�snak vagy az opsys.inf.elte.hu kiszolg�l�n, vagy egy hozz� hasonl� Linux rendszeren kell futnia. A megold�st a bead�si hat�rid�t k�vet� h�ten be kell mutatni a gyakorlatvezet�nek. |
 | 17 | ALmsdaf |
 | 18 | Piros tojás zöld-fehér nyuszi, locsolásér jár két puszi! |
 | 19 | Piros tojás zöld-fehér nyuszi, locsolásér jár a puszi! |
 | 20 | Piros tojás kicsi nyuszi, locsolásér jár nagy puszi! |
+| 21 | Versek, versek locsolo versek |
