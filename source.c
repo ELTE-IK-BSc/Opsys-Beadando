@@ -167,6 +167,9 @@ void writeFile(FILE *file, int poemNum, char **poems)
     fclose(file);
 }
 
+// LOCSOLAS
+
+
 int main()
 {
     FILE *fpi;
@@ -201,7 +204,8 @@ int main()
         printf("    [2] - Versek listazasa \n");
         printf("    [3] - Vers modositasa \n");
         printf("    [4] - Vers torlese \n");
-        printf("    [5] - Kilepes \n");
+        printf("    [5] - Locsolas \n");
+        printf("    [6] - Kilepes \n");
         printf("------------------------------\n");
         printf("    Versek aktualis szama: %d\n", poemNum);
         printf("------------------------------\n");
@@ -236,6 +240,11 @@ int main()
             writeFile(fpi, poemNum, poems);
             break;
         case 5:
+            printf("\n");
+            printf("Locsolas \n");
+            break;
+
+        case 6:
             printf("\n");
             printf("Kilepes \n");
             return 0;
