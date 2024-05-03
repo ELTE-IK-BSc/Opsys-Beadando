@@ -168,7 +168,11 @@ void writeFile(FILE *file, int poemNum, char **poems)
 }
 
 // LOCSOLAS
-
+struct message
+{
+    int id;
+    char mtext[BUFFER_SIZE];
+};
 
 int main()
 {
