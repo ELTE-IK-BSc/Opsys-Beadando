@@ -188,7 +188,23 @@ int send(int uzenetsor)
     return 0;
 }
 
+// receiving a message.
+int receive(int uzenetsor)
+{
+    struct uzenet uz;
+    int status;
+    // az utolso parameter(0) az uzenet azonositoszama
+    // ha az 0, akkor a sor elso uzenetet vesszuk ki
+    // ha >0 (5), akkor az 5-os uzenetekbol a kovetkezot
+    // vesszuk ki a sorbol
+    status = msgrcv(uzenetsor, &uz, 1024, 5, 0);
 
+    if (status < 0)
+        perror("msgsnd");
+    else
+        printf("A kapott uzenet kodja: %ld, szovege:  %s\n", uz.mtype, uz.mtext);
+    return 0;
+}
 
 int main()
 {
