@@ -174,6 +174,22 @@ struct message
     char mtext[BUFFER_SIZE];
 };
 
+// sendig a message
+int send(int uzenetsor)
+{
+    const struct uzenet uz = {5, "Hajra Fradi!"};
+    int status;
+
+    status = msgsnd(uzenetsor, &uz, strlen(uz.mtext) + 1, 0);
+    // a 3. param ilyen is lehet: sizeof(uz.mtext)
+    // a 4. parameter gyakran IPC_NOWAIT, ez a 0-val azonos
+    if (status < 0)
+        perror("msgsnd");
+    return 0;
+}
+
+
+
 int main()
 {
     FILE *fpi;
