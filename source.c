@@ -177,7 +177,7 @@ struct message
 // sendig a message
 int send(int uzenetsor)
 {
-    const struct uzenet uz = {5, "Hajra Fradi!"};
+    const struct message uz = {5, "Hajra Fradi!"};
     int status;
 
     status = msgsnd(uzenetsor, &uz, strlen(uz.mtext) + 1, 0);
@@ -191,7 +191,7 @@ int send(int uzenetsor)
 // receiving a message.
 int receive(int uzenetsor)
 {
-    struct uzenet uz;
+    struct message uz;
     int status;
     // az utolso parameter(0) az uzenet azonositoszama
     // ha az 0, akkor a sor elso uzenetet vesszuk ki
