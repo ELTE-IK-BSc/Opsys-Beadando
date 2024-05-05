@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>   //fork
+#include <sys/wait.h> //waitpid
+#include <sys/msg.h>
+#include <errno.h>
 #define BUFFER_SIZE 1024
 
 int getLastId(FILE *file, int poemNum)
@@ -61,7 +65,6 @@ void addNewPoem(FILE *file, int poemNum)
     fprintf(file, "%s", newPoem);
     fclose(file);
 }
-
 // READ - Versek listázása
 void printPoems(char **poems, int poemNum)
 {
@@ -71,7 +74,6 @@ void printPoems(char **poems, int poemNum)
         printf("%d -%s\n", (i + 1), poems[i]);
     }
 }
-
 // UPDATE - Vers módosítása
 void updatePoem(char **poems)
 {
@@ -181,30 +183,25 @@ int send(int uzenetsor)
     int status;
 
     status = msgsnd(uzenetsor, &uz, strlen(uz.mtext) + 1, 0);
-    // a 3. param ilyen is lehet: sizeof(uz.mtext)
-    // a 4. parameter gyakran IPC_NOWAIT, ez a 0-val azonos
     if (status < 0)
         perror("msgsnd");
     return 0;
 }
 
-// receiving a message.
+// receiving a message
 int receive(int uzenetsor)
 {
     struct message uz;
     int status;
-    // az utolso parameter(0) az uzenet azonositoszama
-    // ha az 0, akkor a sor elso uzenetet vesszuk ki
-    // ha >0 (5), akkor az 5-os uzenetekbol a kovetkezot
-    // vesszuk ki a sorbol
     status = msgrcv(uzenetsor, &uz, 1024, 5, 0);
 
     if (status < 0)
         perror("msgsnd");
     else
-        printf("A kapott uzenet kodja: %ld, szovege:  %s\n", uz.mtype, uz.mtext);
+        printf("A kapott vers kodja: %d, szovege:  %s\n", uz.id, uz.mtext);
     return 0;
 }
+
 
 int main()
 {
@@ -282,6 +279,12 @@ int main()
 
         case 6:
             printf("\n");
+            // Free allocated memory
+            for (int i = 0; i < poemNum; ++i)
+            {
+                free(poems[i]);
+            }
+            free(poems);
             printf("Kilepes \n");
             return 0;
 
@@ -292,11 +295,5 @@ int main()
         }
     }
 
-    // Free allocated memory
-    for (int i = 0; i < poemNum; ++i)
-    {
-        free(poems[i]);
-    }
-    free(poems);
     return 0;
 }
