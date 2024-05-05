@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>   //fork
 #include <sys/wait.h> //waitpid
+#include <wait.h>
 #include <sys/msg.h>
 #include <errno.h>
 #include <signal.h>
@@ -178,19 +179,24 @@ void writeFile(FILE *file, int poemNum, char **poems)
 // LOCSOLAS
 struct message
 {
-    int id;
+    long mtype;
     char mtext[BUFFER_SIZE];
 };
 
 // sendig a message
-int send(int msgQueue, char *poem)
+int send(int msgQueue, char *poem, int size)
 {
     const struct message msg = {5, poem};
     int status;
-
-    status = msgsnd(msgQueue, &msg, strlen(msg.mtext) + 1, 0);
+    printf("\n190 - %d\n", size);
+    printf("\n191 - %s\n", poem);
+    printf("\n192 - %d\n", strlen(msg.mtext) + 1);
+    printf("\n193 - %s\n", msg.mtext);
+    status = msgsnd(msgQueue, &msg, size, 0);
     if (status < 0)
         perror("msgsnd");
+    printf("\nENDsend\n");
+
     return 0;
 }
 
@@ -198,12 +204,10 @@ int receive(int msgQueue)
 {
     struct message msg;
     int status;
-    status = msgrcv(msgQueue, &msg, 1025, 5, 0);
+    status = msgrcv(msgQueue, &msg, BUFFER_SIZE, 5, 0);
 
     if (status < 0)
         perror("msgsnd");
-    else
-        printf("Poem:%s\n", msg.mtext);
     return 0;
 }
 
@@ -246,8 +250,9 @@ int main(int argc, char *argv[])
 
     savePomes(fpi, poemNum, poems, &poemsLen);
 
-    int pipefd[2];
     pid_t pid;
+
+    int pipefd[2];
     char vers1[1024]; // char array for reading from pipe
     char vers2[1024]; // char array for reading from pipe
     if (pipe(pipefd) == -1)
@@ -320,20 +325,7 @@ int main(int argc, char *argv[])
                 perror("Fork hiba");
                 exit(EXIT_FAILURE);
             }
-
-            if (pid > 0) // parent process
-            {
-                printf("%s indulj locsolni!\n", childs[r]);
-                pause();
-                close(pipefd[0]); // Usually we close unused read end
-                write(pipefd[1], poems[0], BUFFER_SIZE);
-                write(pipefd[1], poems[1], BUFFER_SIZE);
-                close(pipefd[1]); // Closing write descriptor
-                printf("Tessek itt van ket vers!\n");
-
-                receive(msgQueue);
-            }
-            else // child
+            if (pid == 0) // child process
             {
                 printf("Megyek Mama!\n");
                 sleep(3);
@@ -357,9 +349,22 @@ int main(int argc, char *argv[])
                 {
                     poem = vers2;
                 }
-                send(msgQueue, poem);
-                wait(NULL);
+                int size = strlen(poem) + 1;
+                send(msgQueue, poem, size);
                 printf("%s\nSzabad-e locsolni!", poem);
+                return 0;
+            }
+            else // parent
+            {
+                printf("%s indulj locsolni!\n", childs[r]);
+                pause();
+                close(pipefd[0]);
+                write(pipefd[1], poems[0], BUFFER_SIZE);
+                write(pipefd[1], poems[1], BUFFER_SIZE);
+                close(pipefd[1]);
+                printf("Tessek itt van ket vers!\n");
+                wait(NULL);
+                receive(msgQueue);
             }
 
             break;
