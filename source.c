@@ -5,6 +5,12 @@
 #include <sys/wait.h> //waitpid
 #include <sys/msg.h>
 #include <errno.h>
+#include <signal.h>
+#include <sys/time.h>
+#include <time.h>
+#include <sys/ipc.h>
+#include <sys/types.h>
+
 #define BUFFER_SIZE 1024
 
 int getLastId(FILE *file, int poemNum)
@@ -177,34 +183,44 @@ struct message
 };
 
 // sendig a message
-int send(int uzenetsor)
+int send(int msgQueue, char *poem)
 {
-    const struct message uz = {5, "Hajra Fradi!"};
+    const struct message msg = {5, poem};
     int status;
 
-    status = msgsnd(uzenetsor, &uz, strlen(uz.mtext) + 1, 0);
+    status = msgsnd(msgQueue, &msg, strlen(msg.mtext) + 1, 0);
     if (status < 0)
         perror("msgsnd");
     return 0;
 }
 
-// receiving a message
-int receive(int uzenetsor)
+int receive(int msgQueue)
 {
-    struct message uz;
+    struct message msg;
     int status;
-    status = msgrcv(uzenetsor, &uz, 1024, 5, 0);
+    status = msgrcv(msgQueue, &msg, 1025, 5, 0);
 
     if (status < 0)
         perror("msgsnd");
     else
-        printf("A kapott vers kodja: %d, szovege:  %s\n", uz.id, uz.mtext);
+        printf("Poem:%s\n", msg.mtext);
     return 0;
 }
 
-
-int main()
+void handler(int signumber)
 {
+    printf("Megérkeztem Mama!\n");
+}
+
+int main(int argc, char *argv[])
+{
+    srand(time(NULL));
+    char childs[4][10] = {"Pufi", "Roli", "Hapsi", "Tapsi"};
+
+    struct sigaction sigact;
+    sigact.sa_handler = handler;
+    sigaction(SIGUSR1, &sigact, NULL);
+
     FILE *fpi;
     fpi = fopen("data.txt", "r");
 
@@ -229,6 +245,28 @@ int main()
     }
 
     savePomes(fpi, poemNum, poems, &poemsLen);
+
+    int pipefd[2];
+    pid_t pid;
+    char vers1[1024]; // char array for reading from pipe
+    char vers2[1024]; // char array for reading from pipe
+    if (pipe(pipefd) == -1)
+    {
+        perror("Hiba a pipe nyitaskor!");
+        exit(EXIT_FAILURE);
+    }
+
+    int msgQueue;
+    int status;
+    key_t key;
+
+    key = ftok(argv[0], 1);
+    msgQueue = msgget(key, 0600 | IPC_CREAT);
+    if (msgQueue < 0)
+    {
+        perror("msgget");
+        return 1;
+    }
 
     while (1)
     {
@@ -275,6 +313,55 @@ int main()
         case 5:
             printf("\n");
             printf("Locsolas \n");
+            int r = rand() % 4; // number between 0-3
+            pid = fork();
+            if (pid == -1)
+            {
+                perror("Fork hiba");
+                exit(EXIT_FAILURE);
+            }
+
+            if (pid > 0) // parent process
+            {
+                printf("%s indulj locsolni!\n", childs[r]);
+                pause();
+                close(pipefd[0]); // Usually we close unused read end
+                write(pipefd[1], poems[0], BUFFER_SIZE);
+                write(pipefd[1], poems[1], BUFFER_SIZE);
+                close(pipefd[1]); // Closing write descriptor
+                printf("Tessek itt van ket vers!\n");
+
+                receive(msgQueue);
+            }
+            else // child
+            {
+                printf("Megyek Mama!\n");
+                sleep(3);
+                kill(getppid(), SIGUSR1);
+                sleep(2);
+
+                close(pipefd[1]);
+                read(pipefd[0], vers1, BUFFER_SIZE);
+                printf("Elso:\n %s \n", vers1);
+                read(pipefd[0], vers2, BUFFER_SIZE);
+                printf("Masodik:\n %s", vers2);
+                close(pipefd[0]);
+                printf("\n");
+                char *poem;
+                r = rand() % 10;
+                if (r <= 4)
+                {
+                    poem = vers1;
+                }
+                else
+                {
+                    poem = vers2;
+                }
+                send(msgQueue, poem);
+                wait(NULL);
+                printf("%s\nSzabad-e locsolni!", poem);
+            }
+
             break;
 
         case 6:
