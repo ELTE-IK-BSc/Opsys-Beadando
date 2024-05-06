@@ -188,14 +188,10 @@ int send(int msgQueue, char *poem, int size)
 {
     const struct message msg = {5, poem};
     int status;
-    printf("\n190 - %d\n", size);
-    printf("\n191 - %s\n", poem);
-    printf("\n192 - %d\n", strlen(msg.mtext) + 1);
-    printf("\n193 - %s\n", msg.mtext);
+
     status = msgsnd(msgQueue, &msg, size, 0);
     if (status < 0)
         perror("msgsnd");
-    printf("\nENDsend\n");
 
     return 0;
 }
